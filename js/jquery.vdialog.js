@@ -70,7 +70,7 @@ $.valert = function(str) {
             });
         }
         $(".vdialogcnt").animate({
-            "opacity": 1,
+            "opacity": 1
         });
     }();
 };
@@ -82,9 +82,9 @@ $.vconfirm = function(str, callback) {
     var closeVdialog = function() {
         $(".vdialogmask, .vdialogcnt").fadeOut("fast", function() {
             $(".vdialogmask, .vdialogcnt").remove();
+            callback(result);
         });
         
-        callback(result);
     };
 
     var randerVdialog = function() {
@@ -145,7 +145,7 @@ $.vconfirm = function(str, callback) {
             });
         }
         $(".vdialogcnt").animate({
-            "opacity": 1,
+            "opacity": 1
         });
     }();
 };
@@ -157,9 +157,9 @@ $.vprompt = function(str, callback) {
     var closeVdialog = function() {
         $(".vdialogmask, .vdialogcnt").fadeOut("fast", function() {
             $(".vdialogmask, .vdialogcnt").remove();
+            callback(result);
         });
         
-        callback(result);
     };
 
     var randerVdialog = function() {
@@ -225,7 +225,7 @@ $.vprompt = function(str, callback) {
             });
         }
         $(".vdialogcnt").animate({
-            "opacity": 1,
+            "opacity": 1
         });
     }();
 };
