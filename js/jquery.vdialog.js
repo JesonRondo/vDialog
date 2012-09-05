@@ -38,19 +38,23 @@ $.valert = function(str) {
         $("body").append($box);
         $(".vdialogcnt, .vdialogmask").css("opacity", 0);
         
-        if (maskswitch) {
-            $(window).resize(function() {
-                var winHeight = $(window).height();
-                var docHeight = $(document).height();
-                var docWidth  = $(document).width();
-                
+        $(window).resize(function() {
+            var winHeight = $(window).height();
+            var docHeight = $(document).height();
+            var docWidth  = $(document).width();
+            var scrollTop = $(window).scrollTop();
+            
+            if (maskswitch) {
                 $(".vdialogmask").css({
                     "height": (winHeight > docHeight ? winHeight : docHeight) + "px",
                     "width" : docWidth + "px"
                 });
+            }
                 
-            }).resize();
-        }
+            $(".vdialogcnt").css({
+                "top": scrollTop + winHeight/2
+            });
+        }).resize();
         
         $(".vdialogcnt").css({
             "width": "350px",
@@ -113,19 +117,23 @@ $.vconfirm = function(str, callback) {
         $("body").append($box);
         $(".vdialogcnt, .vdialogmask").css("opacity", 0);
         
-        if (maskswitch) {
-            $(window).resize(function() {
-                var winHeight = $(window).height();
-                var docHeight = $(document).height();
-                var docWidth  = $(document).width();
-                
+        $(window).resize(function() {
+            var winHeight = $(window).height();
+            var docHeight = $(document).height();
+            var docWidth  = $(document).width();
+            var scrollTop = $(window).scrollTop();
+            
+            if (maskswitch) {
                 $(".vdialogmask").css({
                     "height": (winHeight > docHeight ? winHeight : docHeight) + "px",
                     "width" : docWidth + "px"
                 });
-                
-            }).resize();
-        }
+            }
+            
+            $(".vdialogcnt").css({
+                "top": scrollTop + winHeight/2
+            });
+        }).resize();
         
         $(".vdialogcnt").css({
             "width": "350px",
@@ -193,19 +201,23 @@ $.vprompt = function(str, callback) {
         $("body").append($box);
         $(".vdialogcnt, .vdialogmask").css("opacity", 0);
         
-        if (maskswitch) {
-            $(window).resize(function() {
-                var winHeight = $(window).height();
-                var docHeight = $(document).height();
-                var docWidth  = $(document).width();
-                
+        $(window).resize(function() {
+            var winHeight = $(window).height();
+            var docHeight = $(document).height();
+            var docWidth  = $(document).width();
+            var scrollTop = $(window).scrollTop();
+            
+            if (maskswitch) {
                 $(".vdialogmask").css({
                     "height": (winHeight > docHeight ? winHeight : docHeight) + "px",
                     "width" : docWidth + "px"
                 });
-                
-            }).resize();
-        }
+            }
+
+            $(".vdialogcnt").css({
+                "top": scrollTop + winHeight/2
+            });                
+        }).resize();
         
         $(".vdialogcnt").css({
             "width": "350px",
