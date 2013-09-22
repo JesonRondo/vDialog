@@ -5,12 +5,20 @@
     <link rel="stylesheet" href="css/jquery.vdialog.css" />
     <title>vDialog</title>
 </head>
-<body>
-    <a href="javascript:$.valert('Hello Alert');">valert</a>
-    <a href="javascript:$.vconfirm('Hello Confirm', function(result) {console.log(result);});">vconfirm</a>
-    <a href="javascript:$.vprompt('Hello Prompt', function(result) {console.log(result);});">vprompt</a>
+<body style="background:#000;">
+    <a href="javascript:;" id="bt1">valert1</a>
+    <a href="javascript:;" id="bt2">valert2</a>
     
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
     <script type="text/javascript" src="js/jquery.vdialog.js"></script>
+
+    <script>
+    $('#bt1').on('click', function() {
+    	$.valert('Hello Alert', '提示');
+    });
+    $('#bt2').on('click', function() {
+    	$.valert('<div style="height:100px;">Hello Alert</div>', '提示');
+    });
+    </script>
 </body>
 </html>

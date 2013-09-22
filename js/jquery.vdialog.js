@@ -1,243 +1,106 @@
-/*
+/**
  * @author longzhou
- *
+ * @update 2013-09-22
  * $.valert('hello');
- * $.vconfirm('hello');
- * $.vprompt('hello');
- *
  */
+$.valert = function(str, tit, needcp) {
+    var maskswitch = true;
 
-$.valert = function(str) {
-    var maskswitch = false;
+    var using = false;
 
     var closeVdialog = function() {
-        $(".vdialogmask, .vdialogcnt").fadeOut("fast", function() {
-            $(".vdialogmask, .vdialogcnt").remove();
+        using = false;
+        $('#vdialogmask').fadeOut(100, function() {
+            $(this).hide();
         });
+        $('#vdialogcnt').hide(100);
     };
 
     var randerVdialog = function() {
-        var $box = '<div class="vdialogmask"></div>'
-                 + '<div class="vdialogcnt">'
-                 + '<div class="vdialogheader">'
-                 + '<h5 class="singleline">' + '' + '</h5>'
-                 + '<a href="javascript:void(0);" class="vdialogclose" hidefocus="true">×</a>'
-                 + '</div>'
-                 + '<div class="vdialoginfo">'
-                 + '<p>' + str + '</p>'
-                 + '<div class="cpad">'
-                 + '<a href="javascript:void(0);" class="vbtn vdialogok">确定</a>'
-                 + '</div>'
-                 + '</div>'
-                 + '</div>';
-        
-        $(".vdialogclose, .vdialogmask, .vdialogok").die("click").live("click", function() {
-            closeVdialog();
-        });
-        
-        $("body").append($box);
-        $(".vdialogcnt, .vdialogmask").css("opacity", 0);
+        using = true;
+        tit = tit || '';
+        needcp = (needcp === undefined) ? true : needcp;
+
+        if ($('#vdialogcnt').length <= 0) {
+            var $box = ['<div class="vdialogmask" id="vdialogmask"></div>',
+                        '<div class="vdialogcnt" id="vdialogcnt">',
+                            '<div class="vdialogheader">',
+                                '<h5 class="singleline" id="vdialogcnt_tit">' + tit + '</h5>',
+                                '<a href="javascript:void(0);" class="vdialogclose" hidefocus="true">×</a>',
+                            '</div>',
+                            '<div class="vdialoginfo">',
+                                '<div class="vdialogcnt_str" id="vdialogcnt_str">' + str + '</div>',
+                                '<div class="cpad">',
+                                    '<a href="javascript:void(0);" class="vbtn vdialogok">确定</a>',
+                                '</div>',
+                            '</div>',
+                        '</div>'].join('');
+            $('body').append($box);
+            $('#vdialogcnt').on('click', '.vdialogclose, .vdialogok', function() {
+                closeVdialog();
+            });
+            $('#vdialogmask').on('click', function() {
+                var $vdialogcnt = $('#vdialogcnt');
+                $vdialogcnt.animate({
+                    'zoom': 1.05
+                }, 50, function() {
+                    $vdialogcnt.animate({
+                        'zoom': 1
+                    }, 50);
+                });
+            });
+        } else {
+            $('#vdialogcnt_tit').html(tit);
+            $('#vdialogcnt_str').html(str);
+        }
+        $('#vdialogcnt, #vdialogmask').css('opacity', 0).show();
+        if (!needcp) {
+            $('#vdialogcnt').find('.cpad').hide();
+        } else {
+            $('#vdialogcnt').find('.cpad').show();
+        }
         
         $(window).resize(function() {
+            if (!using) return;
+
             var winHeight = $(window).height();
             var docHeight = $(document).height();
             var docWidth  = $(document).width();
             var scrollTop = $(window).scrollTop();
             
             if (maskswitch) {
-                $(".vdialogmask").css({
-                    "height": (winHeight > docHeight ? winHeight : docHeight) + "px",
-                    "width" : docWidth + "px"
+                $('#vdialogmask').css({
+                    'height': (winHeight > docHeight ? winHeight : docHeight) + 'px',
+                    'width' : docWidth + 'px'
                 });
             }
                 
-            $(".vdialogcnt").css({
-                "top": scrollTop + winHeight/2
+            $('#vdialogcnt').css({
+                'top': scrollTop + winHeight / 2
             });
         }).resize();
+
+        var $vdialogcnt = $('#vdialogcnt');
         
-        $(".vdialogcnt").css({
-            "width": "350px",
-            "height": "auto"
+        $vdialogcnt.css({
+            'width': '350px',
+            'height': 'auto'
         });
         
-        var vwidth = $(".vdialogcnt").width();
-        var vheight = $(".vdialogcnt").height();
-        $(".vdialogcnt").css({
-            "margin-left": "-" + vwidth/2 + "px",
-            "margin-top": "-" + vheight/2 + "px"
+        var vwidth = $vdialogcnt.width();
+        var vheight = $vdialogcnt.height();
+        $vdialogcnt.css({
+            'margin-left': '-' + vwidth/2 + 'px',
+            'margin-top': '-' + vheight/2 + 'px'
         });
         
         if (maskswitch) {
-            $(".vdialogmask").animate({
-                "opacity": 0.2
-            });
+            $('#vdialogmask').animate({
+                'opacity': .6
+            }, 100);
         }
-        $(".vdialogcnt").animate({
-            "opacity": 1
-        });
-    }();
-};
-    
-$.vconfirm = function(str, callback) {
-    var maskswitch = false;
-    var result = false;
-    
-    var closeVdialog = function() {
-        $(".vdialogmask, .vdialogcnt").fadeOut("fast", function() {
-            $(".vdialogmask, .vdialogcnt").remove();
-            callback(result);
-        });
-        
-    };
-
-    var randerVdialog = function() {
-        var $box = '<div class="vdialogmask"></div>'
-                 + '<div class="vdialogcnt">'
-                 + '<div class="vdialogheader">'
-                 + '<h5 class="singleline">' + '' + '</h5>'
-                 + '<a href="javascript:void(0);" class="vdialogclose" hidefocus="true">×</a>'
-                 + '</div>'
-                 + '<div class="vdialoginfo">'
-                 + '<p>' + str + '</p>'
-                 + '<div class="cpad">'
-                 + '<a href="javascript:void(0);" class="vbtn vdialogcancel">取消</a>'
-                 + '<a href="javascript:void(0);" class="vbtn vdialogok">确定</a>'
-                 + '</div>'
-                 + '</div>'
-                 + '</div>';
-        
-        $(".vdialogclose, .vdialogmask, .vdialogok, .vdialogcancel").die("click").live("click", function() {
-            if ($(this).hasClass("vdialogok")) {
-                result = true;
-            }
-            closeVdialog();
-        });
-        
-        $("body").append($box);
-        $(".vdialogcnt, .vdialogmask").css("opacity", 0);
-        
-        $(window).resize(function() {
-            var winHeight = $(window).height();
-            var docHeight = $(document).height();
-            var docWidth  = $(document).width();
-            var scrollTop = $(window).scrollTop();
-            
-            if (maskswitch) {
-                $(".vdialogmask").css({
-                    "height": (winHeight > docHeight ? winHeight : docHeight) + "px",
-                    "width" : docWidth + "px"
-                });
-            }
-            
-            $(".vdialogcnt").css({
-                "top": scrollTop + winHeight/2
-            });
-        }).resize();
-        
-        $(".vdialogcnt").css({
-            "width": "350px",
-            "height": "auto"
-        });
-        
-        var vwidth = $(".vdialogcnt").width();
-        var vheight = $(".vdialogcnt").height();
-        $(".vdialogcnt").css({
-            "margin-left": "-" + vwidth/2 + "px",
-            "margin-top": "-" + vheight/2 + "px"
-        });
-        
-        if (maskswitch) {
-            $(".vdialogmask").animate({
-                "opacity": 0.2
-            });
-        }
-        $(".vdialogcnt").animate({
-            "opacity": 1
-        });
-    }();
-};
-
-$.vprompt = function(str, callback) {
-    var maskswitch = false;
-    var result = "";
-    
-    var closeVdialog = function() {
-        $(".vdialogmask, .vdialogcnt").fadeOut("fast", function() {
-            $(".vdialogmask, .vdialogcnt").remove();
-            callback(result);
-        });
-        
-    };
-
-    var randerVdialog = function() {
-        if ($(".vdialogcnt").length !== 0) {
-            return;
-        }
-    
-        var $box = '<div class="vdialogmask"></div>'
-                 + '<div class="vdialogcnt">'
-                 + '<div class="vdialogheader">'
-                 + '<h5 class="singleline">' + '' + '</h5>'
-                 + '<a href="javascript:void(0);" class="vdialogclose" hidefocus="true">×</a>'
-                 + '</div>'
-                 + '<div class="vdialoginfo">'
-                 + '<p>' + str + '</p>'
-                 + '<p><input type="text" class="vdialogtext" id="vdialogtext" /></p>'
-                 + '<div class="cpad">'
-                 + '<a href="javascript:void(0);" class="vbtn vdialogcancel">取消</a>'
-                 + '<a href="javascript:void(0);" class="vbtn vdialogok">确定</a>'
-                 + '</div>'
-                 + '</div>'
-                 + '</div>';
-        
-        $(".vdialogclose, .vdialogmask, .vdialogok, .vdialogcancel").die("click").live("click", function() {
-            if ($(this).hasClass("vdialogok")) {
-                result = $("#vdialogtext").val();
-            }
-            closeVdialog();
-        });
-        
-        $("body").append($box);
-        $(".vdialogcnt, .vdialogmask").css("opacity", 0);
-        
-        $(window).resize(function() {
-            var winHeight = $(window).height();
-            var docHeight = $(document).height();
-            var docWidth  = $(document).width();
-            var scrollTop = $(window).scrollTop();
-            
-            if (maskswitch) {
-                $(".vdialogmask").css({
-                    "height": (winHeight > docHeight ? winHeight : docHeight) + "px",
-                    "width" : docWidth + "px"
-                });
-            }
-
-            $(".vdialogcnt").css({
-                "top": scrollTop + winHeight/2
-            });                
-        }).resize();
-        
-        $(".vdialogcnt").css({
-            "width": "350px",
-            "height": "auto"
-        });
-        
-        var vwidth = $(".vdialogcnt").width();
-        var vheight = $(".vdialogcnt").height();
-        $(".vdialogcnt").css({
-            "margin-left": "-" + vwidth/2 + "px",
-            "margin-top": "-" + vheight/2 + "px"
-        });
-        
-        if (maskswitch) {
-            $(".vdialogmask").animate({
-                "opacity": 0.2
-            });
-        }
-        $(".vdialogcnt").animate({
-            "opacity": 1
-        });
+        $('#vdialogcnt').animate({
+            'opacity': 1
+        }, 100);
     }();
 };
